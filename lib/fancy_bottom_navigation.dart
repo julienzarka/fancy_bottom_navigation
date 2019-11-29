@@ -247,6 +247,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
   }
 
   void setPage(int page) {
+    if (widget.tabs[page].enabled == false) return;
     widget.onTabChangedListener(page);
     _setSelected(widget.tabs[page].key);
     _initAnimationAndStart(_circleAlignX, 1);
@@ -258,8 +259,9 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
 }
 
 class TabData {
-  TabData({@required this.iconData, @required this.title, this.onclick});
+  TabData({@required this.iconData, @required this.title, this.enabled, this.onclick});
 
+  bool enabled = true;
   IconData iconData;
   String title;
   Function onclick;
