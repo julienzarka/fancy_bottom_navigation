@@ -21,6 +21,7 @@ class FancyBottomNavigation extends StatefulWidget {
       this.circleColor,
       this.activeIconColor,
       this.inactiveIconColor,
+      this.disabledIconColor,
       this.textColor,
       this.barBackgroundColor,
       this.controller})
@@ -32,6 +33,7 @@ class FancyBottomNavigation extends StatefulWidget {
   final Color circleColor;
   final Color activeIconColor;
   final Color inactiveIconColor;
+  final Color disabledIconColor;
   final Color textColor;
   final Color barBackgroundColor;
   final List<TabData> tabs;
@@ -56,6 +58,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
   Color circleColor;
   Color activeIconColor;
   Color inactiveIconColor;
+  Color disabledIconColor;
   Color barBackgroundColor;
   Color textColor;
 
@@ -92,6 +95,12 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
             ? Colors.white
             : Theme.of(context).primaryColor
         : widget.inactiveIconColor;
+
+    disabledIconColor = (widget.disabledIconColor == null)
+        ? (Theme.of(context).brightness == Brightness.dark)
+            ? Colors.grey
+            : Theme.of(context).disabledColor
+        : widget.disabledIconColor;
   }
 
   @override
@@ -112,6 +121,8 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
     int selected = widget.tabs.indexWhere((tabData) => tabData.key == key);
 
     if (mounted) {
+      if (widget.tabs[selected].enabled == false) return;
+
       setState(() {
         currentSelected = selected;
         _circleAlignX = -1 + (2 / (widget.tabs.length - 1) * selected);
@@ -141,7 +152,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
                     selected: t.key == widget.tabs[currentSelected].key,
                     iconData: t.iconData,
                     title: t.title,
-                    iconColor: inactiveIconColor,
+                    iconColor: t.enabled == true ? inactiveIconColor : disabledIconColor,
                     textColor: textColor,
                     callbackFunction: (uniqueKey) {
                       int selected = widget.tabs
@@ -248,6 +259,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
 
   void setPage(int page) {
     if (widget.tabs[page].enabled == false) return;
+
     widget.onTabChangedListener(page);
     _setSelected(widget.tabs[page].key);
     _initAnimationAndStart(_circleAlignX, 1);
@@ -259,9 +271,9 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
 }
 
 class TabData {
-  TabData({@required this.iconData, @required this.title, this.enabled, this.onclick});
+  TabData({@required this.iconData, @required this.title, this.enabled = true, this.onclick});
 
-  bool enabled = true;
+  bool enabled;
   IconData iconData;
   String title;
   Function onclick;
