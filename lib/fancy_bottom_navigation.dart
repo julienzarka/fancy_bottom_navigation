@@ -151,6 +151,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
                     uniqueKey: t.key,
                     selected: t.key == widget.tabs[currentSelected].key,
                     iconData: t.iconData,
+                    counter: t.counter,
                     title: t.title,
                     iconColor: t.enabled == true ? inactiveIconColor : disabledIconColor,
                     textColor: textColor,
@@ -271,8 +272,9 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
 }
 
 class TabData {
-  TabData({@required this.iconData, @required this.title, this.enabled = true, this.onclick});
+  TabData({@required this.iconData, @required this.title, this.enabled = true, this.onclick, this.counter = 0});
 
+  int counter;
   bool enabled;
   IconData iconData;
   String title;

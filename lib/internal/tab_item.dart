@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
 
 const double ICON_OFF = -3;
 const double ICON_ON = 0;
@@ -16,7 +17,9 @@ class TabItem extends StatelessWidget {
         @required this.title,
         @required this.callbackFunction,
         @required this.textColor,
-        @required this.iconColor});
+        @required this.iconColor,
+        this.counter = 0,
+      });
 
   final UniqueKey uniqueKey;
   final String title;
@@ -25,6 +28,7 @@ class TabItem extends StatelessWidget {
   final Function(UniqueKey uniqueKey) callbackFunction;
   final Color textColor;
   final Color iconColor;
+  final int counter;
 
   final double iconYAlign = ICON_ON;
   final double textYAlign = TEXT_OFF;
@@ -63,18 +67,33 @@ class TabItem extends StatelessWidget {
               child: AnimatedOpacity(
                 duration: Duration(milliseconds: ANIM_DURATION),
                 opacity: (selected) ? ALPHA_OFF : ALPHA_ON,
-                child: IconButton(
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  padding: EdgeInsets.all(0),
-                  alignment: Alignment(0, 0),
-                  icon: Icon(
-                    iconData,
-                    color: iconColor,
+                child: counter > 0 ? Badge(
+                  badgeContent: Text(counter.toString()),
+                  child:  IconButton(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    padding: EdgeInsets.all(0),
+                    alignment: Alignment(0, 0),
+                    icon: Icon(
+                      iconData,
+                      color: iconColor,
+                    ),
+                    onPressed: () {
+                      callbackFunction(uniqueKey);
+                    },
                   ),
-                  onPressed: () {
-                    callbackFunction(uniqueKey);
-                  },
+                ) : IconButton(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    padding: EdgeInsets.all(0),
+                    alignment: Alignment(0, 0),
+                    icon: Icon(
+                      iconData,
+                      color: iconColor,
+                    ),
+                    onPressed: () {
+                      callbackFunction(uniqueKey);
+                    },
                 ),
               ),
             ),
