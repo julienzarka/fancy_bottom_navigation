@@ -114,6 +114,14 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
           _initAnimationAndStart(_circleAlignX, 1);
         }
       });
+      widget.controller.animation.addListener(() {
+        setState(() {
+          _circleAlignX = -1 +
+              (2 /
+                  (widget.tabs.length - 1) *
+                  widget.controller.animation.value);
+        });
+      });
     }
   }
 
@@ -153,7 +161,9 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
                     iconData: t.iconData,
                     counter: t.counter,
                     title: t.title,
-                    iconColor: t.enabled == true ? inactiveIconColor : disabledIconColor,
+                    iconColor: t.enabled == true
+                        ? inactiveIconColor
+                        : disabledIconColor,
                     textColor: textColor,
                     callbackFunction: (uniqueKey) {
                       int selected = widget.tabs
@@ -272,7 +282,12 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
 }
 
 class TabData {
-  TabData({@required this.iconData, @required this.title, this.enabled = true, this.onclick, this.counter = 0});
+  TabData(
+      {@required this.iconData,
+      @required this.title,
+      this.enabled = true,
+      this.onclick,
+      this.counter = 0});
 
   int counter;
   bool enabled;
